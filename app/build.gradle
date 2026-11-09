@@ -10,8 +10,8 @@ android {
         applicationId 'me.barmural'
         minSdk 26
         targetSdk 36
-        versionCode 66
-        versionName '0.1.0-native'
+        versionCode 67
+        versionName '0.1.1-native'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     sourceSets {

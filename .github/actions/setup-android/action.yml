@@ -1,0 +1,39 @@
+name: Set up verified Android SDK
+description: Install pinned command-line tools and the SDK packages needed by BarMural.
+runs:
+  using: composite
+  steps:
+    - name: Install Android command-line tools
+      shell: bash
+      run: |
+        set -euo pipefail
+        sdk_dir="$RUNNER_TEMP/barmural-android-sdk"
+        archive="$RUNNER_TEMP/barmural-commandline-tools.zip"
+        curl --fail --location --retry 3 --proto '=https' --tlsv1.2 \
+          https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
+          --output "$archive"
+        # Checksum published in Google's Android SDK repository manifest for tools 12.0.
+        printf '%s  %s\n' d313adb7aedccf6cf0cfca51ec180f0059f5f8f8 "$archive" | sha1sum --check --strict
+        mkdir -p "$sdk_dir/cmdline-tools"
+        unzip -q "$archive" -d "$sdk_dir/cmdline-tools"
+        mv "$sdk_dir/cmdline-tools/cmdline-tools" "$sdk_dir/cmdline-tools/12.0"
+        echo "ANDROID_HOME=$sdk_dir" >> "$GITHUB_ENV"
+        echo "ANDROID_SDK_ROOT=$sdk_dir" >> "$GITHUB_ENV"
+        echo "$sdk_dir/cmdline-tools/12.0/bin" >> "$GITHUB_PATH"
+        echo "$sdk_dir/platform-tools" >> "$GITHUB_PATH"
+    - name: Accept licenses and install required packages
+      shell: bash
+      run: |
+        set -euo pipefail
+        # yes may exit with SIGPIPE; preserve sdkmanager's exit status instead.
+        set +e
+        yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses > "$RUNNER_TEMP/android-licenses.log" 2>&1
+        sdk_status=${PIPESTATUS[1]}
+        set -e
+        if [ "$sdk_status" -ne 0 ]; then
+          cat "$RUNNER_TEMP/android-licenses.log"
+          exit "$sdk_status"
+        fi
+        sdkmanager --sdk_root="$ANDROID_HOME" \
+          'platform-tools' 'platforms;android-36' 'build-tools;35.0.0' 'build-tools;36.0.0'
+        sdkmanager --sdk_root="$ANDROID_HOME" --list_installed
