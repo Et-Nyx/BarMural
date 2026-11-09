@@ -8,7 +8,7 @@ on:
       tag:
         description: Existing native preview tag
         required: true
-        default: v0.1.1-native
+        default: v0.1.2-native
 permissions:
   contents: read
 jobs:
@@ -35,8 +35,13 @@ jobs:
         run: |
           set -euo pipefail
           preview="app/build/outputs/apk/release/barmural-${RELEASE_TAG#v}-preview.apk"
+          preview_key="$RUNNER_TEMP/barmural-preview.p12"
+          keytool -genkeypair -noprompt -storetype PKCS12 \
+            -keystore "$preview_key" -storepass android -keypass android \
+            -alias barmural-preview -keyalg RSA -keysize 3072 -validity 3650 \
+            -dname "CN=BarMural Development Preview,O=BarMural,C=BR"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign \
-            --ks "$HOME/.android/debug.keystore" --ks-key-alias androiddebugkey \
+            --ks "$preview_key" --ks-key-alias barmural-preview \
             --ks-pass pass:android --key-pass pass:android \
             --out "$preview" app/build/outputs/apk/release/app-release-unsigned.apk
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose "$preview"

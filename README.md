@@ -7,7 +7,7 @@ Derivado do [Barinsta](https://github.com/austinhuang0131/barinsta), sob GPL-3.0
 A integração usa APIs não oficiais do Instagram. Compilar ou passar em testes simulados
 não comprova que o Instagram aceita estes endpoints em uma conta real.
 
-## Prévia v0.1.1-native
+## Prévia v0.1.2-native
 
 Esta versão é uma **prévia de desenvolvimento**, com interface nativa Material 3 Expressive.
 O APK otimizado gerado localmente tem aproximadamente **1,6 MB**. Compilações debug e release,
@@ -15,10 +15,10 @@ O APK otimizado gerado localmente tem aproximadamente **1,6 MB**. Compilações 
 não foi validado: o ambiente bloqueou o serviço, e o emulador falhou durante a instalação.
 
 - [Releases e downloads](https://github.com/Et-Nyx/BarMural/releases).
-- [Notas da prévia](docs/releases/v0.1.1-native.md).
+- [Notas da prévia](docs/releases/v0.1.2-native.md).
 - [Acompanhar a publicação no GitHub Actions](https://github.com/Et-Nyx/BarMural/actions/workflows/native_release.yml).
 
-A tag `v0.1.1-native` inicia o workflow de publicação. O Release só fica disponível após
+A tag `v0.1.2-native` inicia o workflow de publicação. O Release só fica disponível após
 os checks passarem no GitHub Actions. O APK de prévia usa assinatura de desenvolvimento,
 sem garantia de atualização entre builds; reinstalar pode apagar sessão e favoritos.
 O código e os APKs são experimentais; não há confirmação de compatibilidade com uma conta real em 2026.
